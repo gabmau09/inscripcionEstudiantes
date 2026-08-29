@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscripción de Estudiantes - Instituto de Informática</title>
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/18T2qw5FsrpZrVN4S3y6xwVFBufKRcaRo">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* PALETA DE COLORES */
+            --c-dark-blue: #2a5d8c;   
+            --c-mid-blue: #649ebf;    
+            --c-light-blue: #bed3d1;  
+            --c-cream: #f2f0e6;       
+
+            --bg-main: var(--c-cream);
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --bg-header: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(100, 158, 191, 0.3);
+            --text-main: #1a3a59; 
+            --text-muted: #4b7899; 
+            --text-dim: #649ebf;
+            
+            --input-bg: #ffffff;
+            --input-border: var(--c-light-blue);
+            --input-focus: var(--c-mid-blue);
+            
+            --btn-danger: #d9534f;
+            --shadow-soft: 0 10px 30px rgba(42, 93, 140, 0.08);
+            --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-family); }
+        body { min-height: 100vh; background-color: var(--bg-main); color: var(--text-main); display: flex; justify-content: center; align-items: flex-start; padding: 30px 20px; position: relative; overflow-x: hidden; }
+
+        .background-decorations { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; overflow: hidden; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.15; }
+        .blob-1 { width: 450px; height: 450px; background: var(--c-dark-blue); top: -100px; left: -100px; }
+        .blob-2 { width: 500px; height: 500px; background: var(--c-mid-blue); bottom: -150px; right: -100px; }
+        .blob-3 { width: 350px; height: 350px; background: var(--c-light-blue); top: 40%; left: 60%; opacity: 0.3; }
+
+        .main-wrapper { position: relative; z-index: 1; width: 100%; max-width: 1080px; display: flex; flex-direction: column; gap: 24px; }
+
+        /* ENCABEZADO */
+        .header-card { background: var(--bg-header); backdrop-filter: blur(16px); border: 1px solid var(--border-color); border-radius: 20px; padding: 18px 24px; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; }
+        .header-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--c-light-blue), var(--c-dark-blue), var(--c-mid-blue)); }
+        .header-content { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+        .header-branding { display: flex; align-items: center; gap: 16px; }
+        .logo-box { width: 56px; height: 56px; background: #ffffff; border: 1.5px solid var(--c-light-blue); border-radius: 14px; padding: 6px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(42, 93, 140, 0.1); flex-shrink: 0; overflow: hidden; }
+        .logo-box img { width: 100%; height: 100%; object-fit: contain; }
+        .header-titles .portal-title { font-size: 1.55rem; font-weight: 800; letter-spacing: -0.02em; color: var(--c-dark-blue); line-height: 1.2; }
+        .header-titles .portal-subtitle { font-size: 0.95rem; font-weight: 500; color: var(--text-muted); margin-top: 2px; }
+        .header-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+        .info-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(190, 211, 209, 0.3); border: 1px solid var(--c-light-blue); border-radius: 10px; padding: 8px 16px; font-size: 0.88rem; font-weight: 600; color: var(--c-dark-blue); }
+        .badge-icon { width: 17px; height: 17px; color: var(--c-mid-blue); flex-shrink: 0; }
+        .time-display { font-variant-numeric: tabular-nums; font-weight: 800; letter-spacing: 0.5px; color: var(--c-dark-blue); }
+
+        /* FORMULARIO */
+        .form-container { background: var(--bg-card); backdrop-filter: blur(16px); border: 1px solid var(--border-color); border-radius: 20px; padding: 32px; box-shadow: var(--shadow-soft); }
+        .form-intro { margin-bottom: 28px; border-bottom: 1px solid var(--c-light-blue); padding-bottom: 20px; }
+        .form-intro h2 { font-size: 1.25rem; font-weight: 800; color: var(--c-dark-blue); margin-bottom: 6px; }
+        .form-intro p { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; line-height: 1.4; }
+
+        .doc-sublink { display: inline-flex; align-items: center; gap: 4px; font-size: 0.82rem; font-weight: 700; color: var(--c-dark-blue); text-decoration: underline; transition: color 0.2s; cursor: pointer; }
+        .doc-sublink:hover { color: var(--c-mid-blue); }
+
+        .form-grid { display: grid; gap: 20px; margin-bottom: 20px; }
+        .row-2-cols { grid-template-columns: 1fr 1fr; }
+        .row-4-cols { grid-template-columns: repeat(4, 1fr); }
+        .row-3-cols { grid-template-columns: 1fr 1.25fr 1fr; align-items: flex-end; }
+        .form-group { display: flex; flex-direction: column; gap: 7px; transition: opacity 0.3s, display 0.3s; }
+
+        .form-label { display: flex; align-items: center; gap: 4px; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.05em; color: var(--c-dark-blue); text-transform: uppercase; }
+        .form-label .required { color: var(--btn-danger); }
+
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select { width: 100%; height: 44px; background: var(--input-bg); border: 1.5px solid var(--input-border); border-radius: 10px; padding: 0 14px; color: var(--text-main); font-size: 0.92rem; font-weight: 600; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+        input::placeholder { color: var(--text-dim); font-weight: 500; }
+        input:focus, select:focus { border-color: var(--c-mid-blue); box-shadow: 0 0 0 3px rgba(100, 158, 191, 0.2); }
+        .select-wrapper select { appearance: none; -webkit-appearance: none; padding-right: 38px; cursor: pointer; text-overflow: ellipsis;}
+        .select-wrapper select option { background-color: #ffffff; color: var(--text-main); font-weight: 500; }
+        .select-arrow { position: absolute; right: 16px; top: 50%; transform: translateY(-60%); width: 8px; height: 8px; border-right: 2.5px solid var(--c-dark-blue); border-bottom: 2.5px solid var(--c-dark-blue); rotate: 45deg; pointer-events: none; }
+
+        input[list]::-webkit-calendar-picker-indicator { display: none !important; }
+
+        /* CUPOS DINÁMICOS */
+        .cupos-section { display: none; background: rgba(255, 255, 255, 0.6); border: 1px solid var(--c-light-blue); border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; }
+        .cupos-title-bar { display: flex; align-items: center; gap: 8px; font-size: 0.76rem; font-weight: 800; letter-spacing: 0.06em; color: var(--c-dark-blue); text-transform: uppercase; margin-bottom: 12px; }
+        .cupos-icon-title { width: 16px; height: 16px; }
+        
+        .cupos-container { display: flex; justify-content: center; width: 100%; }
+        .cupo-card { width: 100%; max-width: 450px; background: rgba(190, 211, 209, 0.3); border: 1.5px solid var(--c-dark-blue); border-radius: 10px; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px; box-shadow: 0 0 12px rgba(42, 93, 140, 0.12); }
+        .cupo-info { display: flex; flex-direction: column; gap: 2px; flex: 1; text-align: left; }
+        .cupo-name { font-size: 0.95rem; font-weight: 800; color: var(--c-dark-blue); line-height: 1.3; white-space: normal; overflow: visible; }
+
+        .cupo-badge { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(100, 158, 191, 0.1); border: 1px solid var(--c-light-blue); border-radius: 8px; padding: 6px 16px; flex-shrink: 0; }
+        .cupo-number { font-size: 1.3rem; font-weight: 800; color: var(--c-dark-blue); line-height: 1; }
+        .cupo-text { font-size: 0.65rem; font-weight: 800; color: var(--c-mid-blue); text-transform: uppercase; letter-spacing: 0.04em; }
+
+        /* DOCUMENTOS */
+        .documents-container { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; margin-bottom: 30px; }
+        .doc-row, .doc-row-compound { background: rgba(255, 255, 255, 0.8); border: 1.5px solid var(--c-light-blue); border-radius: 12px; padding: 14px 18px; transition: border-color 0.2s; }
+        .doc-row:hover, .doc-row-compound:hover { border-color: var(--c-mid-blue); }
+        .doc-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+        .doc-row-compound { display: flex; flex-direction: column; gap: 10px; }
+        .doc-row-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+        .doc-row-bottom { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; padding-top: 10px; border-top: 1px dashed var(--c-light-blue); }
+
+        .doc-label-group { display: flex; align-items: baseline; gap: 8px; }
+        .doc-label { font-size: 0.85rem; font-weight: 800; color: var(--c-dark-blue); letter-spacing: 0.04em; min-width: 140px; text-transform: uppercase; }
+        .file-upload-block { display: flex; align-items: center; gap: 12px; flex: 1; justify-content: flex-end; }
+        
+        .btn-upload-pdf { background: linear-gradient(135deg, var(--c-dark-blue) 0%, var(--c-mid-blue) 100%); color: #ffffff; border: none; padding: 9px 18px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: all 0.2s ease; box-shadow: 0 4px 10px rgba(42, 93, 140, 0.2); white-space: nowrap; user-select: none; }
+        .btn-upload-pdf:hover { background: linear-gradient(135deg, var(--c-mid-blue) 0%, var(--c-dark-blue) 100%); transform: translateY(-1px); box-shadow: 0 6px 14px rgba(42, 93, 140, 0.3); }
+
+        .file-status-wrapper { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; }
+        .file-chosen-status { font-size: 0.8rem; color: var(--text-dim); font-weight: 600; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; user-select: none; }
+        .file-chosen-status.selected { color: var(--c-dark-blue); font-weight: 700; }
+
+        .btn-remove-file { background: rgba(217, 83, 79, 0.1); color: var(--btn-danger); border: 1.5px solid rgba(217, 83, 79, 0.3); border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease; padding: 0; line-height: 1; flex-shrink: 0; }
+        .btn-remove-file:hover { background: var(--btn-danger); color: #ffffff; border-color: var(--btn-danger); transform: scale(1.1); }
+
+        .compound-input-group { display: flex; flex-direction: column; gap: 4px; }
+        .compound-input-group label { font-size: 0.74rem; font-weight: 800; color: var(--text-muted); letter-spacing: 0.04em; text-transform: uppercase; }
+        .compound-input-group input { height: 38px; font-size: 0.85rem; }
+        .hidden-file-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+
+        /* BOTONES ACCIÓN Y FOOTER */
+        .form-actions-footer { display: flex; align-items: center; justify-content: flex-end; gap: 16px; margin-top: 10px; padding-top: 20px; border-top: 1.5px solid var(--c-light-blue); }
+        .btn-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 28px; border-radius: 10px; font-size: 0.95rem; font-weight: 800; letter-spacing: 0.06em; cursor: pointer; transition: background 0.25s, color 0.25s, box-shadow 0.25s; border: none; }
+        .btn-limpiar { background: rgba(217, 83, 79, 0.05); color: var(--btn-danger); border: 1.5px solid rgba(217, 83, 79, 0.3); }
+        .btn-limpiar:hover { background: var(--btn-danger); color: #ffffff; border-color: var(--btn-danger); transform: translateY(-2px); }
+        .btn-enviar { background: linear-gradient(135deg, var(--c-dark-blue) 0%, var(--c-mid-blue) 100%); color: #ffffff; min-width: 160px; box-shadow: 0 4px 14px rgba(42, 93, 140, 0.25); }
+        .btn-enviar:hover { background: linear-gradient(135deg, var(--c-mid-blue) 0%, var(--c-dark-blue) 100%); box-shadow: 0 6px 18px rgba(42, 93, 140, 0.35); transform: translateY(-2px); }
+
+        .btn-action:disabled, .btn-action[disabled] { opacity: 0.5 !important; cursor: not-allowed !important; pointer-events: none !important; transform: none !important; box-shadow: none !important; transition: none !important; }
+
+        .footer-card { background: var(--bg-header); backdrop-filter: blur(16px); border: 1px solid var(--border-color); border-radius: 18px; padding: 20px 24px; box-shadow: var(--shadow-soft); display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+        .footer-top { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; border-bottom: 1px solid var(--c-light-blue); padding-bottom: 14px; }
+        .footer-brand { display: flex; align-items: center; gap: 12px; }
+        .footer-logo { width: 40px; height: 40px; background: #ffffff; border: 1.5px solid var(--c-light-blue); border-radius: 10px; padding: 4px; display: flex; justify-content: center; }
+        .footer-logo img { width: 100%; height: 100%; object-fit: contain; }
+        .footer-brand-text h3 { font-size: 0.95rem; font-weight: 800; color: var(--c-dark-blue); }
+        .footer-brand-text p { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+        .footer-contact { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+        .contact-item { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+        .contact-icon { width: 15px; height: 15px; color: var(--c-mid-blue); }
+        .footer-bottom { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--text-dim); font-weight: 500; }
+
+        /* MODALES */
+        .custom-modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(26, 58, 89, 0.75); backdrop-filter: blur(8px); align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .custom-modal.show { display: flex; opacity: 1; }
+        .custom-modal-content { background: #ffffff; border: 2px solid var(--c-dark-blue); border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 10px 40px rgba(42, 93, 140, 0.3); transform: scale(0.85); transition: transform 0.3s ease; max-width: 350px; width: 90%; }
+        .custom-modal.show .custom-modal-content { transform: scale(1); }
+        .success-icon { width: 64px; height: 64px; background: rgba(100, 158, 191, 0.15); border: 2px solid var(--c-mid-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; color: var(--c-dark-blue); }
+        .success-icon svg { width: 32px; height: 32px; }
+        .custom-modal-content h3 { color: var(--c-dark-blue); font-size: 1.3rem; margin-bottom: 24px; font-weight: 800; }
+
+        @media (max-width: 920px) { .row-4-cols { grid-template-columns: repeat(2, 1fr); } .row-3-cols { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) { .row-2-cols, .row-4-cols, .doc-row-bottom { grid-template-columns: 1fr; } .doc-row, .doc-row-top { flex-direction: column; align-items: flex-start; } .file-upload-block { width: 100%; justify-content: space-between; } .form-actions-footer { flex-direction: column-reverse; } .btn-action { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="background-decorations">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- MODAL DE ÉXITO -->
+    <div id="successModal" class="custom-modal">
+        <div class="custom-modal-content">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <h3>Envío exitoso</h3>
+            <button type="button" class="btn-action btn-enviar" id="closeModalBtn" style="width: 100%;">ACEPTAR</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE PAGO -->
+    <div id="payModal" class="custom-modal">
+        <div class="custom-modal-content" style="max-width: 520px;">
+            <h3 style="margin-bottom: 15px; font-size: 1.1rem;">Cuentas e Información de Pago</h3>
+            <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--c-light-blue); margin-bottom: 20px;">
+                <img src="https://lh3.googleusercontent.com/d/1t84nJ5L270dg3zO_G6rgikpcWOYH3o3f" alt="Información de Pago" style="width: 100%; height: auto; display: block;">
+            </div>
+            <button type="button" class="btn-action btn-enviar" id="closePayModalBtn" style="width: 100%;">CERRAR</button>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <header class="header-card">
+            <div class="header-content">
+                <div class="header-branding">
+                    <div class="logo-box"><img src="https://lh3.googleusercontent.com/d/18T2qw5FsrpZrVN4S3y6xwVFBufKRcaRo" alt="Logo"></div>
+                    <div class="header-titles">
+                        <h1 class="portal-title">Instituto de Informática</h1>
+                        <p class="portal-subtitle">Universidad Nacional de Piura</p>
+                    </div>
+                </div>
+                <div class="header-badges">
+                    <div class="info-badge">
+                        <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <span id="currentDate">Cargando fecha...</span>
+                    </div>
+                    <div class="info-badge">
+                        <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <span class="time-display" id="currentTime">00:00:00</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="form-container">
+            <div class="form-intro">
+                <h2>Formulario de Inscripción</h2>
+                <p>Complete los campos requeridos y adjunte los documentos en PDF. Para consultar los requisitos, acceda al <a href="enlace_requisitos" target="_blank" class="doc-sublink">enlace de requisitos generales</a>.</p>
+            </div>
+
+            <form id="studentRequestForm" autocomplete="off">
+                <div class="form-grid row-2-cols">
+                    <div class="form-group">
+                        <label for="asunto" class="form-label"><span class="label-text">MODALIDAD / ASUNTO</span><span class="required">*</span></label>
+                        <div class="input-wrapper select-wrapper">
+                            <select id="asunto" name="asunto" required disabled>
+                                <option value="" disabled selected>Cargando opciones...</option>
+                            </select>
+                            <span class="select-arrow"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="curso" class="form-label"><span class="label-text">CURSO</span><span class="required">*</span></label>
+                        <div class="input-wrapper select-wrapper">
+                            <select id="curso" name="curso" required disabled>
+                                <option value="" disabled selected>Seleccione un curso...</option>
+                            </select>
+                            <span class="select-arrow"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cupos-section" id="cuposSectionPanel">
+                    <div class="cupos-title-bar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="cupos-icon-title"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path></svg>
+                        <span>VACANTES DISPONIBLES</span>
+                    </div>
+                    <div class="cupos-container" id="singleCupoContainer"></div>
+                </div>
+
+                <div class="form-grid row-2-cols">
+                    <div class="form-group">
+                        <label for="es_unp" class="form-label"><span class="label-text">¿ES ALUMNO O EGRESADO UNP?</span><span class="required">*</span></label>
+                        <div class="input-wrapper select-wrapper">
+                            <select id="es_unp" name="es_unp" required>
+                                <option value="" disabled selected>Seleccione opción...</option>
+                                <option value="SI">SÍ</option>
+                                <option value="NO">NO (EXTERNO)</option>
+                            </select>
+                            <span class="select-arrow"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="correo_personal" class="form-label"><span class="label-text">CORREO PERSONAL</span><span class="required">*</span></label>
+                        <input type="email" id="correo_personal" name="correo_personal" placeholder="ejemplo@gmail.com" required>
+                    </div>
+                </div>
+
+                <div class="form-grid row-4-cols">
+                    <div class="form-group"><label for="nombres" class="form-label"><span class="label-text">NOMBRES</span><span class="required">*</span></label><input type="text" id="nombres" name="nombres" placeholder="En mayúsculas" required></div>
+                    <div class="form-group"><label for="apellidos" class="form-label"><span class="label-text">APELLIDOS</span><span class="required">*</span></label><input type="text" id="apellidos" name="apellidos" placeholder="En mayúsculas" required></div>
+                    <div class="form-group"><label for="dni" class="form-label"><span class="label-text">DNI</span><span class="required">*</span></label><input type="text" id="dni" name="dni" placeholder="8 dígitos" maxlength="8" required></div>
+                    <div class="form-group"><label for="celular" class="form-label"><span class="label-text">CELULAR</span><span class="required">*</span></label><input type="tel" id="celular" name="celular" placeholder="9 dígitos" maxlength="9" required></div>
+                </div>
+
+                <div class="form-grid row-3-cols">
+                    <div class="form-group" id="group_cod_univ"><label for="codigo_universitario" class="form-label"><span class="label-text">CÓDIGO UNIVERSITARIO</span><span class="required">*</span></label><input type="text" id="codigo_universitario" name="codigo_universitario" placeholder="Ej. 0512022030" required></div>
+                    <div class="form-group" id="group_correo_inst"><label for="correo_institucional" class="form-label"><span class="label-text">CORREO INSTITUCIONAL</span><span class="required">*</span></label><input type="email" id="correo_institucional" name="correo_institucional" placeholder="ejemplo@alumnos.unp.edu.pe" required></div>
+                    
+                    <div class="form-group" id="group_escuela">
+                        <label for="escuela" class="form-label"><span class="label-text">ESCUELA PROFESIONAL</span><span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="escuela" name="escuela" list="lista-escuelas" placeholder="Escriba para buscar..." required autocomplete="off">
+                            <datalist id="lista-escuelas">
+                                <option value="AGRONOMÍA"></option>
+                                <option value="INGENIERÍA AGRÍCOLA"></option>
+                                <option value="ARQUITECTURA Y URBANISMO"></option>
+                                <option value="CIENCIAS ADMINISTRATIVAS"></option>
+                                <option value="CIENCIAS CONTABLES Y FINANCIERAS"></option>
+                                <option value="FÍSICA"></option>
+                                <option value="CIENCIAS BIOLÓGICAS"></option>
+                                <option value="MATEMÁTICA"></option>
+                                <option value="INGENIERÍA ELECTRÓNICA Y TELECOMUNICACIONES"></option>
+                                <option value="ESTADÍSTICA"></option>
+                                <option value="MEDICINA HUMANA"></option>
+                                <option value="ENFERMERÍA"></option>
+                                <option value="ESTOMATOLOGÍA"></option>
+                                <option value="OBSTETRICIA"></option>
+                                <option value="PSICOLOGÍA"></option>
+                                <option value="HISTORIA Y GEOGRAFÍA"></option>
+                                <option value="LENGUA Y LITERATURA"></option>
+                                <option value="EDUCACIÓN INICIAL"></option>
+                                <option value="EDUCACIÓN PRIMARIA"></option>
+                                <option value="CIENCIAS DE LA COMUNICACIÓN"></option>
+                                <option value="DERECHO Y CIENCIAS POLÍTICAS"></option>
+                                <option value="ECONOMÍA"></option>
+                                <option value="INGENIERÍA CIVIL"></option>
+                                <option value="INGENIERÍA INDUSTRIAL"></option>
+                                <option value="INGENIERÍA INFORMÁTICA"></option>
+                                <option value="INGENIERÍA INDUSTRIAL E INDUSTRIAS ALIMENTARIAS"></option>
+                                <option value="INGENIERÍA MECATRÓNICA"></option>
+                                <option value="INGENIERÍA DE MINAS"></option>
+                                <option value="INGENIERÍA GEOLÓGICA"></option>
+                                <option value="INGENIERÍA DE PETRÓLEO"></option>
+                                <option value="INGENIERÍA QUÍMICA"></option>
+                                <option value="INGENIERÍA AMBIENTAL Y SEGURIDAD INDUSTRIAL"></option>
+                                <option value="INGENIERÍA PESQUERA"></option>
+                                <option value="INGENIERÍA ZOOTECNIA"></option>
+                                <option value="MEDICINA VETERINARIA"></option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="documents-container">
+                    <div class="doc-row">
+                        <div class="doc-label-group" style="flex-direction: column; flex: 1;">
+                            <span class="doc-label">SOLICITUD</span>
+                            <div id="solicitudLinkContainer" style="display: none; margin-top: 4px;">
+                                <a id="solicitudLink" href="#" target="_blank" class="doc-sublink">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    Descargar formato de solicitud
+                                </a>
+                            </div>
+                        </div>
+                        <div class="file-upload-block">
+                            <input type="file" id="docSolicitud" name="docSolicitud" accept=".pdf" class="hidden-file-input" required>
+                            <label for="docSolicitud" class="btn-upload-pdf">SUBIR PDF</label>
+                            <div class="file-status-wrapper"><span class="file-chosen-status" id="statusSolicitud">Ningún archivo...</span><button type="button" class="btn-remove-file hidden" id="remove-docSolicitud">✕</button></div>
+                        </div>
+                    </div>
+
+                    <div class="doc-row">
+                        <div class="doc-label-group"><span class="doc-label">DNI</span></div>
+                        <div class="file-upload-block">
+                            <input type="file" id="docDni" name="docDni" accept=".pdf" class="hidden-file-input" required>
+                            <label for="docDni" class="btn-upload-pdf">SUBIR PDF</label>
+                            <div class="file-status-wrapper"><span class="file-chosen-status" id="statusDni">Ningún archivo...</span><button type="button" class="btn-remove-file hidden" id="remove-docDni">✕</button></div>
+                        </div>
+                    </div>
+
+                    <div class="doc-row-compound">
+                        <div class="doc-row-top">
+                            <div class="doc-label-group">
+                                <span class="doc-label">PAGO CURSO</span>
+                                <a href="#" class="doc-sublink open-pay-modal" style="font-size: 0.85rem; margin:0;">(Ver cuentas de pago)</a>
+                            </div>
+                            <div class="file-upload-block">
+                                <input type="file" id="docPagoCurso" name="docPagoCurso" accept=".pdf" class="hidden-file-input" required>
+                                <label for="docPagoCurso" class="btn-upload-pdf">SUBIR PDF</label>
+                                <div class="file-status-wrapper"><span class="file-chosen-status" id="statusPagoCurso">Ningún archivo...</span><button type="button" class="btn-remove-file hidden" id="remove-docPagoCurso">✕</button></div>
+                            </div>
+                        </div>
+                        <div class="doc-row-bottom">
+                            <div class="compound-input-group"><label>Nº OPERACIÓN</label><input type="text" id="numOperacionCurso" name="numOperacionCurso" required></div>
+                            <div class="compound-input-group"><label>FECHA PAGO</label><input type="date" id="fechaPagoCurso" name="fechaPagoCurso" required></div>
+                        </div>
+                    </div>
+
+                    <div class="doc-row-compound">
+                        <div class="doc-row-top">
+                            <div class="doc-label-group">
+                                <span class="doc-label">PAGO CONSTANCIA</span>
+                                <a href="#" class="doc-sublink open-pay-modal" style="font-size: 0.85rem; margin:0;">(Ver cuentas de pago)</a>
+                            </div>
+                            <div class="file-upload-block">
+                                <input type="file" id="docPagoConstancia" name="docPagoConstancia" accept=".pdf" class="hidden-file-input" required>
+                                <label for="docPagoConstancia" class="btn-upload-pdf">SUBIR PDF</label>
+                                <div class="file-status-wrapper"><span class="file-chosen-status" id="statusPagoConstancia">Ningún archivo...</span><button type="button" class="btn-remove-file hidden" id="remove-docPagoConstancia">✕</button></div>
+                            </div>
+                        </div>
+                        <div class="doc-row-bottom">
+                            <div class="compound-input-group"><label>Nº OPERACIÓN</label><input type="text" id="numOperacionConstancia" name="numOperacionConstancia" required></div>
+                            <div class="compound-input-group"><label>FECHA PAGO</label><input type="date" id="fechaPagoConstancia" name="fechaPagoConstancia" required></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions-footer">
+                    <button type="reset" class="btn-action btn-limpiar" id="btnResetForm">LIMPIAR</button>
+                    <button type="submit" class="btn-action btn-enviar" id="btnSubmitForm">ENVIAR</button>
+                </div>
+            </form>
+        </main>
+
+        <footer class="footer-card">
+            <div class="footer-top">
+                <div class="footer-brand"><div class="footer-logo"><img src="https://lh3.googleusercontent.com/d/18T2qw5FsrpZrVN4S3y6xwVFBufKRcaRo" alt="Logo"></div><div class="footer-brand-text"><h3>Instituto de Informática</h3><p>Universidad Nacional de Piura</p></div></div>
+                <div class="footer-contact">
+                    <div class="contact-item"><svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span>Campus Universitario - Urb. Miraflores s/n, Piura</span></div>
+                    <div class="contact-item"><svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg><span>institutodeinformatica@unp.edu.pe</span></div>
+                </div>
+            </div>
+            <div class="footer-bottom"><span>© 2026 Instituto de Informática — Universidad Nacional de Piura. Todos los derechos reservados.</span></div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let enviandoFormulario = false;
+
+            // 1. RELOJ
+            const currentDateEl = document.getElementById('currentDate');
+            const currentTimeEl = document.getElementById('currentTime');
+            function updateClock() {
+                const now = new Date();
+                const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+                if (currentDateEl) currentDateEl.textContent = `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]} de ${now.getFullYear()}`;
+                if (currentTimeEl) currentTimeEl.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+            }
+            updateClock(); setInterval(updateClock, 1000);
+
+            // 2. INICIALIZAR DATOS DE BD CURSOS
+            const asuntoSelect = document.getElementById('asunto');
+            const cursoSelect = document.getElementById('curso');
+            
+            if (typeof google !== 'undefined' && google.script) {
+                google.script.run.withSuccessHandler(function(data) {
+                    window.BD_DATA = data; // { "CURSO": { "COMPUTACION": {limite, id, enlace} } }
+                    
+                    asuntoSelect.innerHTML = '<option value="" disabled selected>Seleccione la modalidad...</option>';
+                    Object.keys(data).forEach(mod => {
+                        let opt = document.createElement('option');
+                        opt.value = mod; 
+                        opt.textContent = mod;
+                        asuntoSelect.appendChild(opt);
+                    });
+                    asuntoSelect.disabled = false;
+                }).getInitialData();
+            }
+
+            // 3. ACTUALIZAR SELECT DE CURSOS SEGÚN MODALIDAD
+            asuntoSelect.addEventListener('change', (e) => {
+                const mod = e.target.value;
+                cursoSelect.innerHTML = '<option value="" disabled selected>Seleccione un curso...</option>';
+                
+                if (window.BD_DATA && window.BD_DATA[mod]) {
+                    Object.keys(window.BD_DATA[mod]).forEach(c => {
+                        let opt = document.createElement('option');
+                        opt.value = c; 
+                        opt.textContent = c;
+                        cursoSelect.appendChild(opt);
+                    });
+                    cursoSelect.disabled = false;
+                }
+                updateDynamicViews();
+            });
+
+            cursoSelect.addEventListener('change', updateDynamicViews);
+
+            // 4. LÓGICA DE UNP vs EXTERNO
+            const esUnpSelect = document.getElementById('es_unp');
+            const groupCodUniv = document.getElementById('group_cod_univ');
+            const groupCorreoInst = document.getElementById('group_correo_inst');
+            const groupEscuela = document.getElementById('group_escuela');
+            
+            const codUnivInput = document.getElementById('codigo_universitario');
+            const correoInstInput = document.getElementById('correo_institucional');
+            const escuelaInput = document.getElementById('escuela'); 
+
+            if (esUnpSelect) {
+                esUnpSelect.addEventListener('change', () => {
+                    if (esUnpSelect.value === 'SI') {
+                        groupCodUniv.style.display = 'flex';
+                        groupCorreoInst.style.display = 'flex';
+                        groupEscuela.style.display = 'flex';
+                        codUnivInput.required = true;
+                        correoInstInput.required = true;
+                        escuelaInput.required = true;
+                    } else if (esUnpSelect.value === 'NO') {
+                        groupCodUniv.style.display = 'none';
+                        groupCorreoInst.style.display = 'none';
+                        groupEscuela.style.display = 'none';
+                        codUnivInput.required = false; codUnivInput.value = "";
+                        correoInstInput.required = false; correoInstInput.value = "";
+                        escuelaInput.required = false; escuelaInput.value = "";
+                    }
+                });
+            }
+
+            // 5. MOSTRAR VACANTES Y ENLACES (100% DINÁMICO DESDE EL EXCEL)
+            const cuposSectionPanel = document.getElementById('cuposSectionPanel');
+            const singleCupoContainer = document.getElementById('singleCupoContainer');
+            const solicitudLinkContainer = document.getElementById('solicitudLinkContainer');
+            const solicitudLink = document.getElementById('solicitudLink');
+
+            function updateDynamicViews() {
+                const modalidad = asuntoSelect.value;
+                const curso = cursoSelect.value;
+
+                // Busca la URL correspondiente directamente en la base de datos cargada
+                if (modalidad && curso && window.BD_DATA[modalidad] && window.BD_DATA[modalidad][curso] && window.BD_DATA[modalidad][curso].enlace) {
+                    solicitudLink.href = window.BD_DATA[modalidad][curso].enlace;
+                    solicitudLinkContainer.style.display = 'block';
+                } else {
+                    solicitudLinkContainer.style.display = 'none';
+                }
+
+                if (modalidad === 'CURSO' && curso) {
+                    cuposSectionPanel.style.display = 'block';
+                    singleCupoContainer.innerHTML = `
+                        <div class="cupo-card active" style="width:100%; max-width: 450px;">
+                            <div class="cupo-info" style="flex: 1; padding-right: 15px;">
+                                <span class="cupo-name" style="white-space: normal; overflow: visible;">${curso}</span>
+                            </div>
+                            <div class="cupo-badge">
+                                <span class="cupo-text" style="font-size: 0.6rem; margin-bottom: 2px;">QUEDAN</span>
+                                <span class="cupo-number" id="dynamicCupoNumber">...</span>
+                                <span class="cupo-text" style="font-size: 0.6rem; margin-top: 2px;">VACANTES</span>
+                            </div>
+                        </div>
+                    `;
+                    if (typeof google !== 'undefined' && google.script) {
+                        google.script.run.withSuccessHandler(function(cuposLibres) {
+                            let slotNode = document.getElementById('dynamicCupoNumber');
+                            if(slotNode) slotNode.innerText = cuposLibres;
+                        }).getCupoDisponible(modalidad, curso);
+                    }
+                } else {
+                    cuposSectionPanel.style.display = 'none';
+                    singleCupoContainer.innerHTML = '';
+                }
+            }
+
+            // 6. VALIDACIÓN NÚMEROS
+            const dniInput = document.getElementById('dni');
+            const celularInput = document.getElementById('celular');
+            [dniInput, celularInput].forEach(input => {
+                if (input) input.addEventListener('input', (e) => e.target.value = e.target.value.replace(/[^0-9]/g, ''));
+            });
+
+            // 7. ARCHIVOS PDF Y UI
+            const pdfInputs = [
+                { inputId: 'docSolicitud', statusId: 'statusSolicitud', removeBtnId: 'remove-docSolicitud' },
+                { inputId: 'docDni', statusId: 'statusDni', removeBtnId: 'remove-docDni' },
+                { inputId: 'docPagoCurso', statusId: 'statusPagoCurso', removeBtnId: 'remove-docPagoCurso' },
+                { inputId: 'docPagoConstancia', statusId: 'statusPagoConstancia', removeBtnId: 'remove-docPagoConstancia' }
+            ];
+            pdfInputs.forEach(({ inputId, statusId, removeBtnId }) => {
+                const input = document.getElementById(inputId); const status = document.getElementById(statusId); const removeBtn = document.getElementById(removeBtnId);
+                function clearSingleFile() { input.value = ''; status.textContent = 'Ningún archivo...'; status.classList.remove('selected'); if (removeBtn) removeBtn.classList.add('hidden'); }
+                if (input && status) {
+                    input.addEventListener('change', (e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                            const file = e.target.files[0];
+                            if (!file.name.toLowerCase().endsWith('.pdf') && file.type !== 'application/pdf') {
+                                alert('Solo se permiten archivos PDF.'); clearSingleFile(); return;
+                            }
+                            status.textContent = `✓ ${file.name}`; status.classList.add('selected');
+                            if (removeBtn) removeBtn.classList.remove('hidden');
+                        } else { clearSingleFile(); }
+                    });
+                }
+                if (removeBtn) removeBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); clearSingleFile(); });
+            });
+
+            // 8. MODALES
+            const payModal = document.getElementById('payModal');
+            const successModal = document.getElementById('successModal');
+            document.querySelectorAll('.open-pay-modal').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); payModal.classList.add('show'); }); });
+            document.getElementById('closePayModalBtn')?.addEventListener('click', () => payModal.classList.remove('show'));
+            document.getElementById('closeModalBtn')?.addEventListener('click', () => successModal.classList.remove('show'));
+
+            // 9. ENVÍO Y VALIDACIONES
+            const form = document.getElementById('studentRequestForm');
+            const btnEnviar = document.getElementById('btnSubmitForm');
+            const btnLimpiar = document.getElementById('btnResetForm');
+
+            function setFormSubmittingState(isSubmitting) {
+                if (isSubmitting) {
+                    btnEnviar.dataset.originalText = btnEnviar.innerHTML;
+                    btnEnviar.innerHTML = "ENVIANDO DATOS...";
+                    btnEnviar.disabled = true; btnLimpiar.disabled = true;
+                    btnEnviar.style.pointerEvents = "none"; btnLimpiar.style.pointerEvents = "none";
+                    btnEnviar.style.opacity = "0.5"; btnLimpiar.style.opacity = "0.5";
+                } else {
+                    if (btnEnviar.dataset.originalText) btnEnviar.innerHTML = btnEnviar.dataset.originalText;
+                    btnEnviar.disabled = false; btnLimpiar.disabled = false;
+                    btnEnviar.style.pointerEvents = ""; btnLimpiar.style.pointerEvents = "";
+                    btnEnviar.style.opacity = ""; btnLimpiar.style.opacity = "";
+                }
+            }
+
+            if (form) {
+                form.addEventListener('reset', () => {
+                    pdfInputs.forEach(({ inputId, statusId, removeBtnId }) => {
+                        const input = document.getElementById(inputId); const status = document.getElementById(statusId); const removeBtn = document.getElementById(removeBtnId);
+                        if (input) input.value = '';
+                        if (status) { status.textContent = 'Ningún archivo...'; status.classList.remove('selected'); }
+                        if (removeBtn) removeBtn.classList.add('hidden');
+                    });
+                    
+                    cuposSectionPanel.style.display = 'none';
+                    singleCupoContainer.innerHTML = '';
+                    solicitudLinkContainer.style.display = 'none';
+                    
+                    groupCodUniv.style.display = 'flex'; codUnivInput.disabled = false;
+                    groupCorreoInst.style.display = 'flex'; correoInstInput.disabled = false;
+                    groupEscuela.style.display = 'flex'; escuelaInput.disabled = false;
+                });
+
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault(); 
+                    if (enviandoFormulario) return false;
+                    if (typeof google === 'undefined') { alert("Abre este formulario desde la URL generada en Google Apps Script."); return; }
+
+                    if (esUnpSelect.value === 'SI') {
+                        const escuelaIngresada = escuelaInput.value.trim().toUpperCase();
+                        escuelaInput.value = escuelaIngresada; 
+                        
+                        const opcionesValidas = Array.from(document.getElementById('lista-escuelas').options).map(opt => opt.value.trim().toUpperCase());
+                        
+                        if (!opcionesValidas.includes(escuelaIngresada)) {
+                            alert("Por favor, escriba o seleccione una Escuela Profesional válida de la lista desplegable.");
+                            escuelaInput.focus();
+                            return false; 
+                        }
+                    }
+
+                    enviandoFormulario = true;
+                    setFormSubmittingState(true);
+
+                    google.script.run
+                        .withSuccessHandler(function(res) {
+                            enviandoFormulario = false;
+                            setFormSubmittingState(false);
+                            if(res.success) {
+                                successModal.classList.add('show');
+                                form.reset();
+                                updateDynamicViews();
+                            } else {
+                                alert("Error: " + res.message);
+                            }
+                        })
+                        .withFailureHandler(function(err) {
+                            enviandoFormulario = false;
+                            setFormSubmittingState(false);
+                            alert("Error de red: " + err);
+                        })
+                        .procesarFormulario(form);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
